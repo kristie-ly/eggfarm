@@ -4,21 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Egg Farm</title>
-    <link rel="stylesheet" type="text/css" href="eggstoreCSS.css">
-
+    <link rel="stylesheet" type="text/css" href="eggstorestylesheet.css">
     <script>
-        //        var shop=
-        //            {
-        //                gold: 900,
-        //                eggs: document.getElementsByClassName("eggs"),
-        //                buyButton: document.getElementById("buyButtonLocation"),
-        //                goldamt: document.getElementsByClassName("goldAmount"),
-        //                selectedEgg: document.getElementsByClassName("selectedEgg"),
-        //                isPurchased: false
-        //            };
-
-
-
         //When egg is clicked, assign it an extra class called "selectedEgg"
         //The CSS for this class makes the egg glow
         //the for loop assures that only a single egg is assigned to the class at once
@@ -61,50 +48,76 @@
                 window.alert("You don't have enough gold");
             }
         }
-
-//        function redirect()
-//        {
-//            window.location= "gamescreen.php";
-//        }
-
-        //document.getElementsByClassName("selectedEgg"")[0].id
-
-
     </script>
 </head>
 
 <body>
+<?php
+$gamecost=10;
+$servername="localhost";
+$username = "kly5";
+$password="912703004";
+$dbname= "kly5";
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error){
+    die("Connection failure".$conn->connect_error);
+}
+
+//takes away initial 10 gold for starting gameplay
+$_SESSION["gold"] -= $gamecost;
+$modifygold = "UPDATE userinfo SET gold = '$_SESSION[gold]' WHERE username = '$_SESSION[username]'";
+$result = $conn->query($modifygold);
 
 
+$query= mysqli_query($conn, "SELECT * FROM eggs ORDER BY price");
+while ($row = mysqli_fetch_array($query))
+{
+    $eggtype = $row['eggtype'];
+    $price = $row['price'];
+}
 
-<!--<form id="form1">-->
-<!--    <img src="./mouseEgg.png" title="mouseegg" id="mouseEggImage" />-->
-<!--    <input type="checkbox" id="imgCheck" name="imgCheck" value="mouseegg" style="visibility: hidden;" />-->
-<!--    <input type="submit" value="Submit" />-->
-<!--</form>-->
+//$sql = "SELECT gold FROM userinfo WHERE username= '$_SESSION[username]'";
+//$sql = "UPDATE userinfo SET '$_SESSION[gold]' = $price WHERE username = '$_SESSION[username]'";
+//$result = $conn->query($sql);
+//if($result->num_rows > 0)
+//{
+//    while($row = $result->fetch_assoc())
+//    {
+//        echo "id: " . $row["userid"] . " - Name: " . $row["username"] . " " . $row["gold"] . "<br>";
+//        $_SESSION["gold"] = $row["gold"];
+//        echo $_SESSION["gold"];
+//    }
+//}
+//else {
+//    echo "0 results";
+//}
+//?>
+
 
 <div class="panel">
     <h1 >Welcome to the shop!</h1>
+    <span id="buyButtonLocation">BUY</span>
     <span class="goldAmount">
         <img src="./sprite_coin_0.png" style="width:25px;height:25px;">
         You have <?php echo $_SESSION["gold"];?> gold
     </span>
-    <!--hidden form that allows selected egg's id to be passed to "value"-->
-        <form id="eggselectorform" action="gamescreenwithgold.php" method="get">
-            <input type="hidden" name="chosenegg" id="chosenegg" value="defaultValue">
-            <input type="image" id="submittor" src="nextButton.png" width="80" height="50" align="">
-        </form>
 
-        <span id="buyButtonLocation">BUY</span>
-<!--        <span id="nextPageButton">NEXT</span>-->
 
+    <!--hidden form that allows the selected egg's id to be passed to "value"-->
+    <form id="eggselectorform" action="gamescreenwithsql.php" method="get">
+        <input type="hidden" name="chosenegg" id="chosenegg" value="defaultValue">
+        <input type="image" id="submittor" value="NEXT">
+
+    </form>
 
     <p>Click on an egg to purchase it.</p>
     <div class="row">
-        <img src="./mouseegg.png" class="eggs" id="mouseEgg">
+        <img src="./mouseEgg.png" class="eggs" id="mouseEgg">
         <img src="./snakeegg.png" class="eggs" id="snakeEgg">
         <img src="./roosteregg.png" class="eggs" id="roosterEgg">
-        <img src="./pigegg.png" class="eggs" id="pigEgg">
+        <img src="./pigEgg.png" class="eggs" id="pigEgg">
     </div>
 
     <div class="row">
@@ -117,7 +130,7 @@
     <div class="row">
         <img src="./rabbitEgg.png" class="eggs" id="rabbitEgg">
         <img src="./dogEgg.png" class="eggs" id="dogEgg">
-        <img src="./unknownegg.png" class="eggs" id="sheepEgg">
+        <img src="./sheepEgg.png" class="eggs" id="sheepEgg">
         <img src="./horseEgg.png" class="eggs" id="horseEgg">
     </div>
 
@@ -131,8 +144,8 @@
 
 
     <div class="row">
-        <img src="./cowEgg.png" class="eggs" id="oxEgg">
-        <img src="./unknownegg.png" class="eggs" id="monkeyEgg">
+        <img src="./oxEgg.png" class="eggs" id="oxEgg">
+        <img src="./monkeyEgg.png" class="eggs" id="monkeyEgg">
         <img src="./tigerEgg.png" class="eggs" id="tigerEgg">
         <img src="./dragonEgg.png" class="eggs" id="dragonEgg">
 
@@ -144,6 +157,8 @@
         <span class="sign">1500</span>
         <span class="sign">2000</span>
     </div>
+
+
 </div>
 
 <script>
@@ -245,7 +260,6 @@
 
     shop["buyButton"].addEventListener('click', purchase);
 
-//    shop["nextButton"].addEventListener('click', redirect);
 </script>
 
 

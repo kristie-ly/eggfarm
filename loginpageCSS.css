@@ -1,0 +1,35 @@
+.panel
+{
+    background: lightskyblue;
+    height: 530px;
+    width: 400px;
+    font-family: "American Typewriter";
+    text-align: center;
+}
+
+.msgPosition
+{
+    position: absolute;
+    top: 120px;
+    left: 10px;
+    font-size: 16px;
+    font-family: "American Typewriter";
+    text-align: center;
+}
+.login
+{
+    position: absolute;
+    top: 150px;
+    left: 25px;
+    font-size: 14px;
+    font-family: "American Typewriter";
+}
+
+.barn
+{
+    position: absolute;
+    top: 200px;
+    left: 58px;
+    height: 350px;
+    width: 350px;
+}

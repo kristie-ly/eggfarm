@@ -1,28 +1,70 @@
 <?php session_start();
+$newValue = $_SESSION["gold"];
+$_SESSION["chosenegg"] = $_REQUEST["chosenegg"];
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>EggFarm</title>
     <link rel="stylesheet" type="text/css" href="gamescreenCSS.css">
+    <?php
+    $servername="localhost";
+    $username = "kly5";
+    $password="912703004";
+    $dbname= "kly5";
 
+    $conn = new mysqli($servername, $username, $password, $dbname);
+
+    if ($conn->connect_error){
+        die("Connection failure".$conn->connect_error);
+    }
+   // echo "Successfully connected to the db </br>";
+
+    $sql = "SELECT * FROM eggs WHERE eggtype= '$_SESSION[chosenegg]'";
+    $result = $conn->query($sql);
+    if($result->num_rows > 0)
+    {
+        while($row = $result->fetch_assoc())
+        {
+            //echo $row["price"];
+            $eggcost = $row["price"];
+            //echo $eggcost;
+            $_SESSION["gold"] -= $eggcost;
+        }
+    }
+    else {
+       // echo "0 results";
+        echo null;
+    }
+    $modifygold = "UPDATE userinfo SET gold = '$_SESSION[gold]' WHERE username = '$_SESSION[username]'";
+    $result = $conn->query($modifygold);
+
+    $temp = $_SESSION["chosenegg"];
+    //echo $temp;
+    $animaltype= rtrim($temp,"Egg");
+    //echo $animaltype;
+    ?>
     <script>
         //putting everything into a game class "object"
         var game=
-        {
-            keepbutton: document.getElementsByClassName("keepBLocation"),
-            sellbutton: document.getElementsByClassName("sellBLocation"),
-            anim: document.getElementsByClassName("animalLocation"),
-            egg: document.getElementsByClassName("eggPosition"),
-            gameOver: true,
-            game_time: <?php echo $_SESSION["time"];?>
-        };
+            {
+                keepbutton: document.getElementsByClassName("keepBLocation"),
+                sellbutton: document.getElementsByClassName("sellBLocation"),
+                navmenubutton: document.getElementsByClassName("navmenubutton"),
+                anim: document.getElementsByClassName("animalLocation"),
+                egg: document.getElementsByClassName("eggPosition"),
+                gameOver: true,
+                game_time:60
+            };
 
         function startGame()
         {
             game.gameOver=false;
             document.getElementById("startBPos").style.visibility="hidden";
+            window.top(animalsDictionary[mouseEgg].requiredTaps);
         }
 
         function addUp() {
@@ -33,52 +75,31 @@
                 //If statements that change the image & the message based on the number of clicks
 
 
-                if (x > 10) {
+                if (x > animalsDictionary["<?php echo $_SESSION["chosenegg"]?>"].requiredTaps*0.25) {
                     game.egg[0].src = "./<?php echo $_REQUEST["chosenegg"];?>_crack1.png";
                     document.getElementById("message").innerHTML = "Keep going!";
                 }
-                if (x > 20) {
+                if (x > animalsDictionary["<?php echo $_SESSION["chosenegg"]?>"].requiredTaps*0.5) {
                     game.egg[0].src = "./<?php echo $_REQUEST["chosenegg"];?>_crack2.png";
                     document.getElementById("message").innerHTML = "Tap tap tap!";
 
                 }
-                if (x > 30) {
+                if (x > animalsDictionary["<?php echo $_SESSION["chosenegg"]?>"].requiredTaps*0.75) {
                     game.egg[0].src = "./<?php echo $_REQUEST["chosenegg"];?>_crack3.png";
                     document.getElementById("message").innerHTML = "Ready to hatch!!!";
                 }
-                if (x > 40) {
+                if (x > animalsDictionary["<?php echo $_SESSION["chosenegg"]?>"].requiredTaps) {
                     //    document.getElementById("animal").src = "./pig.png";
                     // document.getElementById("pinkegg").src = "./pigegg_crack3.png";
                     game.egg[0].src = "./<?php echo $_REQUEST["chosenegg"];?>_crack4.png";
                     document.getElementById("message").innerHTML = "Here's your baby!";
-                    game.anim[0].src = "./pig.png";
+                    game.anim[0].src = "./<?php echo $animaltype?>.png";
                     game.sellbutton[0].style.visibility="visible";
                     game.keepbutton[0].style.visibility="visible";
                     return game.gameOver= true;
                 }
-
-
             }
         }
-
-        //a dictionary to be used later; assign the number of taps that each egg needs to hatch
-        var numberOfTaps =
-            {
-                mouseegg: "10",
-                snakeegg: "20",
-                roosteregg: "30",
-                rabbitegg: "40",
-                dogegg: "50",
-                sheepegg: "60",
-                horseegg: "70",
-                oxegg: "90",
-                monkeyegg:"100",
-                tigeregg:"150",
-                dragonegg:"200"
-            };
-
-
-
 
     </script>
 
@@ -88,16 +109,19 @@
 
 <body>
 
+
+
 <div class="panel">
     <h1 id="message"></h1>
-    <h3 id="goldM" class="goldMPosition">Your Gold: 0 </h3>
+    <h3 id="goldM" class="goldMPosition">Your Gold: <?php echo $_SESSION["gold"];?> </h3>
     <p id = "timer" class="timerPosition"> Timer: 60</p>
     <p id = "tapCount" class="tapPosition"> Taps: 0</p>
     <img src="./nest1.png" class="nestPosition"/>
     <img src="./<?php echo $_REQUEST["chosenegg"];?>.png" class="eggPosition">
     <img src="" class="animalLocation">
-    <img src="sprite_keep_0.png" class="keepBLocation">
-    <img src="sprite_sell_0.png" class="sellBLocation">
+    <a href="keepscreenwithsql.php"> <img src="sprite_keep_0.png" class="keepBLocation"> </a>
+    <a href="sellscreenwithsql.php"> <img src="sprite_sell_0.png" class="sellBLocation"> </a>
+    <a href="navigationmenuwithSWL.php" class="navmenubutton"> MAIN MENU </a>
     <span id="startBPos">START GAME</span>
 </div>
 
@@ -123,6 +147,7 @@
         {
             document.getElementById("timer").innerHTML = "Timer: Game Over!";
             clearInterval(countdown);
+            game.navmenubutton[0].style.visibility="visible";
             return game.gameOver = true;
         }
     }, 1000); //setinterval is a js built in method that takes a function & an interval

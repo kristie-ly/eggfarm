@@ -1,0 +1,111 @@
+.nestPosition
+{
+    position: absolute;
+    top:  140px;
+    left: 10px;
+}
+
+.animalLocation
+{
+    position: absolute;
+    top: 60px;
+    left: 75px;
+}
+.msgPosition
+{
+    position: absolute;
+    top: 290px;
+    left: 50px;
+    font-size: 22px;
+    font-family: "American Typewriter";
+}
+.goldMPosition
+{
+    position: absolute;
+    top: 490px;
+    left: 30px;
+    font-size: 20px;
+    color: #DAA520;
+    font-family: "American Typewriter";
+}
+.timerPosition
+{
+    position: absolute;
+    top: 470px;
+    left: 50px;
+    font-size: 20px;
+    font-family: "American Typewriter";
+}
+.tapPosition
+{
+    position: absolute;
+    top: 450px;
+    left: 50px;
+    font-size: 20px;
+    font-family: "American Typewriter";
+}
+.panel
+{
+    background: lightskyblue;
+    height: 530px;
+    width: 400px;
+}
+.sellBLocation
+{
+    position: absolute;
+    top: 410px;
+    left: 150px;
+    visibility: hidden;
+}
+.keepBLocation
+{
+    position: absolute;
+    top: 412px;
+    left: 250px;
+    visibility: hidden;
+}
+#startBPos {
+    font-size: 20px;
+    font-family: "American Typewriter";
+    color: #4d2600;
+    position: absolute;
+    top: 30px;
+    left: 130px;
+    background-image: url("./pricetag.png");
+    padding: 15px;
+    margin-bottom: 15px;
+
+}
+
+#message
+{
+    font-family:"American Typewriter";
+    text-align: center;
+}
+
+
+#tapCount
+{
+    font-family: "American Typewriter";
+    /*top: 420px;*/
+}
+
+.eggPosition
+{
+    /*position: absolute;*/
+    /*top: 210px;*/
+    /*left: 165px;*/
+    position: absolute;
+    top: 100px;
+    left: 140px;
+    max-width: 50%;
+    max-height: 50%;
+
+}
+
+
+span.sign {
+    background-image: url("./pricetag.png");
+    padding: 5px;
+    margin-bottom: 15px;
+}
